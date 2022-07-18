@@ -1,5 +1,5 @@
-import { effect, stop } from '../effect';
-import { reactive } from '../reactive';
+import { effect, stop } from '../effect'
+import { reactive } from '../reactive'
 describe('effect', () => {
   it('happy path', () => {
     const user = reactive({
@@ -14,7 +14,7 @@ describe('effect', () => {
 
     user.age++
     expect(nextAge).toBe(12)
-  });
+  })
 
   it('should return runner when call effect', () => {
     let foo = 10
@@ -79,5 +79,4 @@ describe('effect', () => {
     stop(runner)
     expect(onStop).toBeCalledTimes(1)
   })
-
-});
+})
