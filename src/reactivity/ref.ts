@@ -7,6 +7,8 @@ class RefImpl {
   get value () {
     return this._value
   }
+
+  // set value () {}
 }
 
 export function ref(value) {
