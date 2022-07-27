@@ -37,11 +37,31 @@ export function ref(value) {
   return new RefImpl(value)
 }
 
+export function proxyRefs(objectWitchRefs) {
+  return new Proxy(objectWitchRefs, {
+    get(target, key) {
+      // get -> key 是 ref 的话 就返回 .value
+      return unRef(Reflect.get(target, key))
+    },
+
+    set(target, key, value) {
+      // set -> value 不是 ref 但是 target[key] 是 ref 直接替换 .value
+      // 反之 value 是 ref 直接替换 target[key]
+      if(isRef(target[key]) && !isRef(value)) {
+        return (target[key].value = value)
+      } else {
+        return Reflect.set(target, key, value)
+      }
+    }
+  })
+}
+
 
 export function isRef(ref) {
   return !!ref.__v_isRef
 }
 
 export function unRef(ref) {
+  // 判断是否是ref 如果是 返回ref.value 否则返回ref本身
   return isRef(ref) ? ref.value : ref
 }
