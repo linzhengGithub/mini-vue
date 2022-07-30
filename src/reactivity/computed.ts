@@ -1,6 +1,6 @@
 import { ReactiveEffect } from "./effect"
 
-class ComputedImpl{
+class ComputedRefImpl{
   private _getter: any
   private _value: any
   private _dirty: boolean = true
@@ -24,5 +24,5 @@ class ComputedImpl{
 }
 
 export function computed(getter) {
-  return new ComputedImpl(getter)
+  return new ComputedRefImpl(getter)
 }
