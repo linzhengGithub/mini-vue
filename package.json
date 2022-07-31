@@ -1,7 +1,8 @@
 {
   "name": "mini-vue",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "lib/mini-vue.cjs.js",
+  "module": "lib/mini-vue.esm.js",
   "repository": "git@github.com:linzhengGithub/mini-vue.git",
   "author": "linzheng <alidlg9045@126.com>",
   "license": "MIT",

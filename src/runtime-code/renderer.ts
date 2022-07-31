@@ -6,7 +6,10 @@ export function render(vnode, container) {
 
 function patch(vnode, container) {
   // 去处理组件
-  // TODO 判断是不是一个element
+  // TODO 判断是不是一个element, 如果是一个element, 则处理 element
+  // 如何区分 是 element 还是 component
+  // processElement()
+
   processComponent(vnode, container)
 }
 
