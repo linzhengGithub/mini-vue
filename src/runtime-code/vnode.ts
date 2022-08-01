@@ -1,7 +1,9 @@
 export function createVNode(type, props?, children?) {
-  return {
+  const vnode = {
     type,
     props,
     children
   }
+  
+  return vnode
 }
