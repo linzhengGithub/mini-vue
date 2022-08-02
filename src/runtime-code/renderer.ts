@@ -29,10 +29,7 @@ function mountElement(vnode: any, container: any) {
     el.textContent = children
     console.log(el)
   } else if(Array.isArray(children)) {
-    children.forEach(v => {
-      console.log(v)
-      patch(v, el)
-    })
+    mountChildren(vnode, el)
   }
 
   const { props } = vnode
@@ -41,6 +38,12 @@ function mountElement(vnode: any, container: any) {
       el.setAttribute(key, val)
   }
   container.append(el)
+}
+
+function mountChildren(vnode: any, el: any) {
+    vnode.children.forEach(v => {
+      patch(v, el)
+    })
 }
 
 function processComponent(vnode: any, container: any) {
