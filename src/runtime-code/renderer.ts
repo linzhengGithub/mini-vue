@@ -7,7 +7,7 @@ export function render(vnode, container) {
 
 function patch(vnode, container) {
   // 去处理组件
-  // TODO 判断是不是一个element, 如果是一个element, 则处理 element
+  // 判断是不是一个element, 如果是一个element, 则处理 element
   // 如何区分 是 element 还是 component
   if (typeof vnode.type === 'string') {
     processElement(vnode, container)
@@ -21,29 +21,28 @@ function processElement(vnode: any, container: any) {
 }
 
 function mountElement(vnode: any, container: any) {
-  const el = document.createElement(vnode.type)
+  const el = (vnode.el = document.createElement(vnode.type))
 
   const { children } = vnode
 
-  if(typeof children === 'string') {
+  if (typeof children === 'string') {
     el.textContent = children
-    console.log(el)
-  } else if(Array.isArray(children)) {
+  } else if (Array.isArray(children)) {
     mountChildren(vnode, el)
   }
 
   const { props } = vnode
   for (const key in props) {
-      const val = props[key]
-      el.setAttribute(key, val)
+    const val = props[key]
+    el.setAttribute(key, val)
   }
   container.append(el)
 }
 
 function mountChildren(vnode: any, el: any) {
-    vnode.children.forEach(v => {
-      patch(v, el)
-    })
+  vnode.children.forEach(v => {
+    patch(v, el)
+  })
 }
 
 function processComponent(vnode: any, container: any) {
@@ -56,15 +55,18 @@ function mountComponent(vnode: any, container: any) {
   const instance = createComponentInstance(vnode)
 
   setupComponent(instance)
-  setupRenderEffect(instance, container)
+  setupRenderEffect(instance, vnode, container)
 }
 
-function setupRenderEffect(instance: any, container: any) {
-  const subTree = instance.render()
+function setupRenderEffect(instance: any, vnode: any, container: any) {
+  const { proxy } = instance
+  const subTree = instance.render.call(proxy)
 
   // vnode -> patch
   // vnode -> element -> mountElement
   patch(subTree, container)
+
+  vnode.el = subTree.el
 
 }
 
