@@ -20,7 +20,7 @@ export const App = {
           console.log('mouseout')
         }
       },
-      [h('div', {}, 'hi' + this.msg), h(Foo, { count: 1 })]
+      [h('div', {}, 'hi' + this.msg), h(Foo, { onAdd() { console.log('onAdd') } })]
       // string
       // 'hi,' + this.msg
       // 'hi, mini-vue'
