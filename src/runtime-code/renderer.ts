@@ -1,5 +1,6 @@
 import { ShapeFlags } from "../shared/ShapeFlags"
 import { createComponentInstance, setupComponent } from "./component"
+import { Fragment } from "./vnode"
 
 export function render(vnode, container) {
   patch(vnode, container)
@@ -10,13 +11,24 @@ function patch(vnode, container) {
   // 判断是不是一个element, 如果是一个element, 则处理 element
   // 如何区分 是 element 还是 component
 
-  const { shapeFlag } = vnode
-
-  if (shapeFlag & ShapeFlags.ELEMENT) {
-    processElement(vnode, container)
-  } else if (shapeFlag & ShapeFlags.STATEFUL_COMPONENT) {
-    processComponent(vnode, container)
+  const { type, shapeFlag } = vnode
+  switch (type) {
+    case Fragment:
+      patchChildren(vnode, container)
+      break;
+    default:
+      if (shapeFlag & ShapeFlags.ELEMENT) {
+        processElement(vnode, container)
+      } else if (shapeFlag & ShapeFlags.STATEFUL_COMPONENT) {
+        processComponent(vnode, container)
+      }
+      break;
   }
+}
+
+function patchChildren(vnode: any, container: any) {
+  // Implement
+  mountChildren(vnode, container)
 }
 
 function processElement(vnode: any, container: any) {
@@ -38,8 +50,8 @@ function mountElement(vnode: any, container: any) {
   for (const key in props) {
     const val = props[key]
     // on + eventName -> onMousedown
-    const isOn = (key: string) => /^on[A-Z]/.test(key) 
-    if(isOn(key)) {
+    const isOn = (key: string) => /^on[A-Z]/.test(key)
+    if (isOn(key)) {
       const event = key.slice(2).toLowerCase()
       el.addEventListener(event, val)
     } else {
