@@ -4,8 +4,7 @@ function createElement(type) {
   return document.createElement(type)
 }
 
-function patchProp(el, key, props) {
-  const val = props[key]
+function patchProp(el, key, val) {
   // on + eventName -> onMousedown
   const isOn = (key: string) => /^on[A-Z]/.test(key)
   if (isOn(key)) {
@@ -16,8 +15,8 @@ function patchProp(el, key, props) {
   }
 }
 
-function insert(el, container) {
-  return container.append(el)
+function insert(el, parent) {
+  parent.append(el)
 }
 
 const renderer: any = createRenderer({
