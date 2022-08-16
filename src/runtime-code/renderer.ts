@@ -1,4 +1,5 @@
 import { effect } from "../reactivity/effect"
+import { EMPTY_OBJ } from "../shared"
 import { ShapeFlags } from "../shared/ShapeFlags"
 import { createComponentInstance, setupComponent } from "./component"
 import { createAppAPI } from "./createApp"
@@ -44,16 +45,16 @@ export function createRenderer(options) {
     const el = (n2.el = document.createTextNode(children))
     container.append(el)
   }
-  
+
   function processFragment(n1, n2: any, container: any, parentComponent) {
     mountChildren(n2, container, parentComponent)
   }
-  
+
   function processElement(n1, n2: any, container: any, parentComponent) {
-    if(!n1) {
+    if (!n1) {
       mountElement(n2, container, parentComponent)
     } else {
-      patchElement(n1, n2, container, )
+      patchElement(n1, n2, container,)
     }
   }
 
@@ -62,8 +63,35 @@ export function createRenderer(options) {
     console.log('n1', n1);
     console.log('n2', n2);
 
+    const oldProps = n1.props || EMPTY_OBJ
+    const newProps = n2.props || EMPTY_OBJ
+
+    const el = (n2.el = n1.el)
+
     // props
+    patchProps(el, oldProps, newProps)
     // children
+  }
+
+  function patchProps(el, oldProps, newProps) {
+    if (oldProps !== newProps) {
+      for (const key in newProps) {
+        const prevProp = oldProps[key]
+        const nextProp = newProps[key]
+
+        if (prevProp !== nextProp) {
+          hostPatchProp(el, key, prevProp, nextProp)
+        }
+      }
+      
+      if(oldProps !== EMPTY_OBJ) {
+        for (const key in oldProps) {
+          if(!(key in newProps)) {
+            hostPatchProp(el, key, oldProps[key], null)
+          } 
+        }
+      }
+    }
   }
 
   function mountElement(vnode: any, container: any, parentComponent) {
@@ -80,31 +108,31 @@ export function createRenderer(options) {
     const { props } = vnode
     for (const key in props) {
       const val = props[key]
-      hostPatchProp(el, key, val)
+      hostPatchProp(el, key, null, val)
     }
     // addChild()
     hostInsert(el, container)
   }
-  
+
   function mountChildren(vnode: any, el: any, parentComponent) {
     vnode.children.forEach(v => {
       patch(null, v, el, parentComponent)
     })
   }
-  
+
   function processComponent(n1, n2: any, container: any, parentComponent) {
     // 挂载组件
     mountComponent(n2, container, parentComponent)
   }
-  
+
   function mountComponent(initialVnode: any, container: any, parentComponent) {
     // 创建一个实例 instance
     const instance = createComponentInstance(initialVnode, parentComponent)
-    
+
     setupComponent(instance)
     setupRenderEffect(instance, initialVnode, container)
   }
-  
+
   function setupRenderEffect(instance: any, initialVnode: any, container: any) {
     effect(() => {
       if (!instance.isMounted) {
@@ -112,13 +140,13 @@ export function createRenderer(options) {
         const { proxy } = instance
         const subTree = (instance.subTree = instance.render.call(proxy))
         console.log('init', subTree);
-        
+
         // vnode -> patch
         // vnode -> element -> mountElement
         patch(null, subTree, container, instance)
-        
+
         initialVnode.el = subTree.el
-        
+
         instance.isMounted = true
       } else {
         // update
@@ -127,7 +155,7 @@ export function createRenderer(options) {
         const prevSubTree = instance.subTree
         instance.subTree = subTree
         console.log('update');
-        
+
         patch(prevSubTree, subTree, container, instance)
       }
     })

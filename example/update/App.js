@@ -13,7 +13,7 @@ export const App = {
       bar: 'bar',
     })
 
-     const onChangePropsDemo1 = () => {
+    const onChangePropsDemo1 = () => {
       // foo 值修改了
       props.value.foo = 'new-foo'
     }
@@ -42,7 +42,8 @@ export const App = {
     return h(
       'div',
       {
-        id: 'root'
+        id: 'root',
+        ...this.props,
       },
       [
         h('div', {}, 'count:' + this.count), // 收集依赖
