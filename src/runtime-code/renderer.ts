@@ -112,7 +112,6 @@ export function createRenderer(options) {
     function isSomeVNodeType(n1: any, n2: any) {
       return n1.type === n2.type && n1.key === n2.key
     }
-
     // 左侧对比
     while (i <= e1 && i <= e2) {
       const n1 = c1[i]
@@ -125,7 +124,6 @@ export function createRenderer(options) {
       }
       i++
     }
-
     // 右侧对比
     while (i <= e1 && i <= e2) {
       const n1 = c1[e1]
@@ -136,23 +134,21 @@ export function createRenderer(options) {
       } else {
         break;
       }
-
       e1--
       e2--
     }
-
     // 新的比老的多 -> 创建el
     if (i > e1) {
       if (i <= e2) {
         const nextPos = e2 + 1
         const anchor = nextPos < c2.length ? c2[nextPos].el : null
-        while(i<=e2) {
+        while (i <= e2) {
           patch(null, c2[i], container, parentComponent, anchor)
           i++
         }
       }
-    } else if(i > e2) {
-      while(i <= e1) {
+    } else if (i > e2) {
+      while (i <= e1) {
         hostRemove(c1[i].el)
         i++
       }
