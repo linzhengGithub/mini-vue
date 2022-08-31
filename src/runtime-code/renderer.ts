@@ -152,6 +152,49 @@ export function createRenderer(options) {
         hostRemove(c1[i].el)
         i++
       }
+    } else {
+      // 中间值的对比
+      let s1 = i
+      let s2 = i
+      // 新的中间值的最大下表(+1因为是下标)
+      const toBePatched = e2 - s2 + 1
+      let patched
+      // 创建一个key的映射表
+      const keyToNewIndexMap = new Map()
+      for (let i = s2; i <= e2; i++) {
+        const nextChild = c2[i]
+        keyToNewIndexMap.set(nextChild.key, i)
+      }
+
+      let newIndex
+      for (let i = s1; i <= e1; i++) {
+        let prevChild = c1[i]
+        // 老的 中间值比 新的 多；多出来的直接remove
+        if (patched >= toBePatched) {
+          hostRemove(c1[patched].el)
+          container
+        }
+
+        if (prevChild.key !== null) {
+          newIndex = keyToNewIndexMap.get(prevChild.key)
+        } else {
+          for (let j = s2; j <= e2; j++) {
+            if (isSomeVNodeType(prevChild, c2[j])) {
+              newIndex = j
+              break
+            }
+          }
+        }
+
+        if (newIndex === undefined) {
+          hostRemove(prevChild.el)
+        } else {
+          patch(prevChild, c2[newIndex], container, parentComponent, null)
+          patched++
+        }
+      }
+
+
     }
 
   }
