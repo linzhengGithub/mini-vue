@@ -216,7 +216,10 @@ export function createRenderer(options) {
         const nextChild = c2[newIndex]
         const anchor = newIndex + 1 < l2 ? c2[newIndex + 1].el : null
 
-        if (moved) {
+        if (newIndexToOldIndexMap[i] === 0) {
+          // 创建新的节点
+          patch(null, nextChild, container, parentComponent, anchor)
+        } else if (moved) {
           if (j < 0 || i !== increasingNewIndexSequence[j]) {
             hostInsert(nextChild.el, container, anchor)
           } else {
