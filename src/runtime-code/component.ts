@@ -71,6 +71,6 @@ export function getCurrentInstance() {
   return currentInstance
 }
 
-function setCurrenInstance(instance) {
+export function setCurrenInstance(instance) {
   currentInstance = instance
 }

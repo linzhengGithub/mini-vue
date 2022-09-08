@@ -71,10 +71,10 @@ export function createRenderer(options) {
 
     const el = (n2.el = n1.el)
 
-    // props
-    patchProps(el, oldProps, newProps)
     // children
     patchChildren(n1, n2, el, parentComponent, anchor)
+    // props
+    patchProps(el, oldProps, newProps)
   }
 
   function patchChildren(n1, n2, container, parentComponent, anchor) {
@@ -299,7 +299,7 @@ export function createRenderer(options) {
 
   function updateComponent(n1, n2) {
     const instance = (n2.component = n1.component)
-    if(shouldUpdateComponent(n1,n2)){
+    if (shouldUpdateComponent(n1, n2)) {
       instance.next = n2
       instance.update()
     } else {
@@ -310,7 +310,7 @@ export function createRenderer(options) {
 
   function mountComponent(initialVnode: any, container: any, parentComponent, anchor) {
     // 创建一个实例 instance
-    const instance = (initialVnode.component =  createComponentInstance(initialVnode, parentComponent))
+    const instance = (initialVnode.component = createComponentInstance(initialVnode, parentComponent))
 
     setupComponent(instance)
     setupRenderEffect(instance, initialVnode, container, anchor)
@@ -320,9 +320,9 @@ export function createRenderer(options) {
     instance.update = effect(() => {
       if (!instance.isMounted) {
         // init
+        console.log('init');
         const { proxy } = instance
-        const subTree = (instance.subTree = instance.render.call(proxy))
-        console.log('init', subTree);
+        const subTree = (instance.subTree = instance.render.call(proxy, proxy))
 
         // vnode -> patch
         // vnode -> element -> mountElement
@@ -336,23 +336,22 @@ export function createRenderer(options) {
         console.log('update');
         // 需要一个vnode
         const { next, vnode } = instance
-        if(next) {
+        if (next) {
           next.el = vnode.el
           updateComponentPreRender(instance, next)
         }
         const { proxy } = instance
-        const subTree = instance.render.call(proxy)
+        const subTree = instance.render.call(proxy, proxy)
         const prevSubTree = instance.subTree
         instance.subTree = subTree
 
         patch(prevSubTree, subTree, container, instance, anchor)
       }
-    }, {
-      scheduler(){
-        console.log('update - scheduler')
+    },{
+      scheduler() {
+        console.log('update-scheduler')
       }
     })
-
   }
   return {
     createApp: createAppAPI(render),
@@ -360,7 +359,7 @@ export function createRenderer(options) {
 }
 
 function updateComponentPreRender(instance: any, nextVNode: any) {
-  instance.vonode = nextVNode.vnode
+  instance.vonode = nextVNode
   instance.next = null
   instance.props = nextVNode.props
 }
