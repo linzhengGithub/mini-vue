@@ -12,7 +12,7 @@ export default {
         count.value = i
       }
       
-      console.log(instance)
+      // console.log(instance)
       // nextTick(() => {
       //   console.log(instance);
       // })

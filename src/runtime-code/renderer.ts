@@ -347,6 +347,10 @@ export function createRenderer(options) {
 
         patch(prevSubTree, subTree, container, instance, anchor)
       }
+    }, {
+      scheduler(){
+        console.log('update - scheduler')
+      }
     })
 
   }
