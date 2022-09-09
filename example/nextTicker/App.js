@@ -1,4 +1,4 @@
-import { ref, h, getCurrentInstance } from '../../lib/mini-vue.esm.js';
+import { ref, h, getCurrentInstance, nextTick } from '../../lib/mini-vue.esm.js';
 
 export default {
   name: 'App',
@@ -6,16 +6,16 @@ export default {
     const count = ref(1)
     const instance = getCurrentInstance()
 
-    const onClick = () => {
+    function onClick() {
       for (let i = 0; i < 100; i++) {
         console.log('update');
-        count.value++
+        count.value = i
       }
       
       console.log(instance)
-      // nextTick(() => {
-      //   console.log(instance);
-      // })
+      nextTick(() => {
+        console.log(instance);
+      })
     }
     
     return {
