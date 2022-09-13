@@ -15,4 +15,18 @@ describe('Parse', () => {
       })
     })
   });
+
+  describe('simple element div', () => {
+    const ast = baseParse('<div></div>')
+
+    // root
+    expect(ast.children[0]).toStrictEqual({
+      type: NodeTypes.ELEMENT,
+      content: {
+        type: NodeTypes.SIMPLE_EXPRESSION,
+        tag: 'div'
+      }
+    })
+  });
+
 });
