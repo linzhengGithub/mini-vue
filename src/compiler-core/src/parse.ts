@@ -46,11 +46,13 @@ function isEnd(context, parentTag) {
 
 function parseText(context: any) {
   let endIndex = context.source.length
-  let endToken = '{{'
+  let endTokens = ['<', '{{']
 
-  const index = context.source.indexOf(endToken)
-  if (index !== -1) {
-    endIndex = index
+  for (let i = 0; i < endTokens.length; i++) { 
+    const index = context.source.indexOf(endTokens[i])
+    if (index !== -1 && endIndex > index) {
+      endIndex = index
+    }
   }
 
   const content = parseTextData(context, endIndex)
@@ -72,7 +74,7 @@ function parseTextData(context, length) {
 
 function parseElement(context) {
   const element: any = parseTag(context, TagType.Start)
-  
+
   element.children = parseChildren(context, element.tag)
 
   parseTag(context, TagType.End)
