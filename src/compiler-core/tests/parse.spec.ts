@@ -61,7 +61,7 @@ describe('Parse', () => {
     })
   });
 
-  test.only('Nested element', () => {
+  test('Nested element', () => {
     const ast = baseParse('<div><p>hi</p>{{message}}</div>')
 
     expect(ast.children[0]).toStrictEqual({
@@ -89,5 +89,11 @@ describe('Parse', () => {
       ]
     })
   });
+
+  test('should throw error when lack end tag', () => {
+    expect(() => {
+      baseParse('<div><span></div>')
+    }).toThrow(`缺少结束标签:span`)
+  })
 
 });
