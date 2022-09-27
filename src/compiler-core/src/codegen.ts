@@ -2,6 +2,9 @@
 export function generate(ast) {
   const context = createCodegenContext()
   const { push } = context
+
+  push(`const { toDisplayString: _toDisplayString } = Vue`)
+  push('\n')
   push('return ')
 
   const functionName = 'render'
