@@ -1,8 +1,9 @@
 import { NodeTypes } from "./ast"
+import { TO_DISPLAY_STRING } from "./tunTimeHelpers"
 
 export function transform(root, options = {}) {
   const context = createTransformContext(root, options)
-  
+
   traverseNode(root, context)
 
   createRootCodegen(root)
@@ -42,22 +43,23 @@ function traverseNode(node: any, context) {
 
   switch (node.type) {
     case NodeTypes.INTERPOLATION:
-      context.helper('toDisplayString')
+      context.helper(TO_DISPLAY_STRING)
       break;
-  
+    case NodeTypes.ROOT:
+    case NodeTypes.ELEMENT:
+      traverseChildren(node, context);
+      break;
+
     default:
       break;
   }
 
-  traverseChildren(node, context);
 }
 
 function traverseChildren(node, context) {
   const children = node.children
-  if (children) {
-    for (let i = 0; i < children.length; i++) {
-      const node = children[i];
-      traverseNode(node, context);
-    }
+  for (let i = 0; i < children.length; i++) {
+    const node = children[i];
+    traverseNode(node, context);
   }
 }
