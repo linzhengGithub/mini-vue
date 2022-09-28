@@ -15,7 +15,7 @@ describe('codegen', () => {
   it('interpolation', () => {
     const ast = baseParse('{{message}}')
     transform(ast, {
-      nodeTransform: [transformExpression]
+      nodeTransforms: [transformExpression]
     })
     const {code} = generate(ast)
     

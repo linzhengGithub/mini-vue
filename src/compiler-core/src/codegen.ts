@@ -42,7 +42,7 @@ export function generate(ast) {
 function genExpression(node: any, context: any) {
   // Implement
   const { push } = context
-  push(`_ctx.${node.content}`)
+  push(`${node.content}`)
 }
 
 function getInterpolation(node: any, context: any) {
