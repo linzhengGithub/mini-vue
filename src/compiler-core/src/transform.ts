@@ -1,9 +1,13 @@
+import { NodeTypes } from "./ast"
+
 export function transform(root, options = {}) {
   const context = createTransformContext(root, options)
   
   traverseNode(root, context)
 
   createRootCodegen(root)
+
+  root.helpers = [...context.helpers.keys()]
 }
 
 function createRootCodegen(root: any) {
@@ -13,7 +17,11 @@ function createRootCodegen(root: any) {
 function createTransformContext(root: any, options: any): any {
   const context = {
     root,
-    nodeTransforms: options.nodeTransforms || []
+    nodeTransforms: options.nodeTransforms || [],
+    helpers: new Map(),
+    helper(key) {
+      context.helpers.set(key, 1)
+    }
   }
 
   return context
@@ -31,6 +39,15 @@ function traverseNode(node: any, context) {
   }
 
   console.log(node);
+
+  switch (node.type) {
+    case NodeTypes.INTERPOLATION:
+      context.helper('toDisplayString')
+      break;
+  
+    default:
+      break;
+  }
 
   traverseChildren(node, context);
 }
