@@ -59,7 +59,7 @@ function getText(node: any, context: any) {
 }
 
 function genFunctionPreamble(ast: any, context: any) {
-  const { push, helper } = context
+  const { push } = context
   const VueBinging = 'Vue'
   const aliasHelper = (s) => `${helperMapName[s]}:_${helperMapName[s]}`
 

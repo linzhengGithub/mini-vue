@@ -21,4 +21,12 @@ describe('codegen', () => {
     
     expect(code).toMatchSnapshot()
   }) 
+
+  it('element', () => {
+    const ast = baseParse('<div></div>')
+    transform(ast)
+    const {code} = generate(ast)
+    
+    expect(code).toMatchSnapshot()
+  }) 
 });
