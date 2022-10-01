@@ -1,5 +1,5 @@
 import { NodeTypes } from "./ast"
-import { helperMapName, TO_DISPLAY_STRING } from "./tunTimeHelpers"
+import { CREATE_ELEMENT_VNODE, helperMapName, TO_DISPLAY_STRING } from "./tunTimeHelpers"
 
 export function generate(ast) {
   const context = createCodegenContext()
@@ -33,12 +33,20 @@ function genNode(node, context) {
     case NodeTypes.SIMPLE_EXPRESSION:
       genExpression(node, context)
       break;
+    case NodeTypes.ELEMENT:
+      genElement(node, context)
+      break;
 
     default:
       break;
   }
 }
 
+function genElement(node: any, context: any) {
+  const { push, helper } = context
+  const { tag } = node
+  push(`${helper(CREATE_ELEMENT_VNODE)}('${tag}')`)
+}
 
 function genExpression(node: any, context: any) {
   const { push } = context
